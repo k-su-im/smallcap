@@ -7,7 +7,7 @@ from PIL import Image
 import h5py
 from PIL import ImageFile
 import torch
-from transformers import AutoTokenizer, CLIPFeatureExtractor, AutoModel
+from transformers import AutoTokenizer, CLIPFeatureExtractor, AutoModel, AutoModelForImageCaptioning
 from transformers.models.auto.configuration_auto import AutoConfig
 from transformers.modeling_outputs import BaseModelOutput
 
@@ -146,6 +146,20 @@ def main(args):
 
     eval_df = pd.DataFrame(data[split])
     args.outfile_name = '{}_preds.json'.format(split)
+
+    """ Hugging Face Pretrained Model Load """
+    # Load the pretrained SmallCap model and tokenizer
+    model_name = "Yova/SmallCap7M"  # Model from HuggingFace
+    model = AutoModelForImageCaptioning.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    # Load the feature extractor for image preprocessing (CLIP model)
+    feature_extractor = CLIPFeatureExtractor.from_pretrained("openai/clip-vit-base-patch32")
+
+    # Move the model to the appropriate device (GPU or CPU)
+    model.to(args.device)
+    model.eval()  # Set model to evaluation mode
+    """ Hugging Face Pretrained Model Load End """
 
     # load and configure tokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.decoder_name)
