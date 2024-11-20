@@ -150,7 +150,6 @@ def main(args):
     """ Hugging Face Pretrained Model Load """
     # Load the pretrained SmallCap model and tokenizer
     model_name = "Yova/SmallCap7M"  # Model from HuggingFace
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
 
     # Load the feature extractor for image preprocessing (CLIP model)
