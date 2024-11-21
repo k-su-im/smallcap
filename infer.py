@@ -174,6 +174,12 @@ def main(args):
         checkpoint_path = os.path.join(args.model_path, args.checkpoint_path)
         infer_one_checkpoint(args, feature_extractor, tokenizer, checkpoint_path, eval_df, infer_fn)
     else:
+        print("Using pretrained model directly for inference.")
+        preds = infer_fn(args, feature_extractor, tokenizer, model, eval_df)
+        with open(args.outfile_name, 'w') as outfile:
+            json.dump(preds, outfile)
+
+    """ original code
         for checkpoint_path in os.listdir(args.model_path):
             if 'runs' in checkpoint_path:
                 continue
@@ -182,6 +188,7 @@ def main(args):
                 print('Found existing file for', checkpoint_path)
             else:
                 infer_one_checkpoint(args, feature_extractor, tokenizer, checkpoint_path, eval_df, infer_fn)
+    """
 
 
 if __name__ == '__main__':
